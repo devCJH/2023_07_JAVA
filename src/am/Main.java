@@ -51,11 +51,11 @@ public class Main {
 					continue;
 				}
 				
-				System.out.println("번호	|	제목	|	작성일	");
+				System.out.println("번호	|	제목	|		작성일		|	조회수	");
 				
 				for(int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d	|	%s	|	%s	\n", article.id, article.title, article.regDate);
+					System.out.printf("%d	|	%s	|	%s	|	%d	\n", article.id, article.title, article.regDate, article.hit);
 				}
 				
 			} else if (cmd.startsWith("article detail ")) {
@@ -77,9 +77,12 @@ public class Main {
 					continue;
 				}
 				
+				foundArticle.increaseHit();
+				
 				System.out.println("== 게시글 상세보기 ==");
 				System.out.printf("번호 : %d\n", foundArticle.id);
 				System.out.printf("작성일 : %s\n", foundArticle.regDate);
+				System.out.printf("조회수 : %d\n", foundArticle.hit);
 				System.out.printf("제목 : %s\n", foundArticle.title);
 				System.out.printf("내용 : %s\n", foundArticle.body);
 				
@@ -152,11 +155,17 @@ class Article {
 	String regDate;
 	String title;
 	String body;
+	int hit;
 	
 	Article(int id, String regDate, String title, String body){
 		this.id = id;
 		this.regDate = regDate;
 		this.title = title;
 		this.body = body;
+		this.hit = 0;
+	}
+	
+	void increaseHit() {
+		this.hit++;
 	}
 }
