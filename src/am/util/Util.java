@@ -1,4 +1,4 @@
-package am;
+package am.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
