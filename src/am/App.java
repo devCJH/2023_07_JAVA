@@ -5,14 +5,17 @@ import java.util.List;
 import java.util.Scanner;
 
 import am.dto.Article;
+import am.dto.Member;
 import am.util.Util;
 
 public class App {
 	
 	private List<Article> articles;
+	private List<Member> members;
 	
 	public App() {
 		articles = new ArrayList<>();
+		members = new ArrayList<>();
 	}
 	
 	public void run() {
@@ -23,6 +26,7 @@ public class App {
 		Scanner sc = new Scanner(System.in);
 
 		int lastArticleId = 3;
+		int lastMemberId = 0;
 
 		while (true) {
 
@@ -37,7 +41,53 @@ public class App {
 			if (cmd.equals("exit")) {
 				break;
 			}
-			if (cmd.equals("article write")) {
+			
+			if (cmd.equals("member join")) {
+
+				lastMemberId++;
+				String regDate = Util.getDateStr();
+
+				String loginId = null;
+				
+				while(true) {
+					System.out.printf("로그인 아이디 : ");
+					loginId = sc.nextLine();
+					
+					if (isLoginIdDup(loginId)) {
+						System.out.printf("%s은(는) 이미 사용중인 아이디입니다\n", loginId);
+						continue;
+					}
+					
+					System.out.printf("%s은(는) 사용가능한 아이디입니다\n", loginId);
+					break;
+				}
+				
+				String loginPw = null;
+				
+				while(true) {
+					System.out.printf("로그인 비밀번호 : ");
+					loginPw = sc.nextLine();
+					System.out.printf("로그인 비밀번호 확인 : ");
+					String loginPwChk = sc.nextLine();
+					
+					if (loginPw.equals(loginPwChk) == false) {
+						System.out.println("비밀번호가 일치하지 않습니다");
+						continue;
+					}
+					
+					break;
+				}
+				
+				System.out.printf("로그인 이름 : ");
+				String name = sc.nextLine();
+
+				Member member = new Member(lastMemberId, regDate, loginId, loginPw, name);
+
+				members.add(member);
+
+				System.out.printf("%s 회원님의 가입이 완료되었습니다\n", loginId);
+				
+			} else if (cmd.equals("article write")) {
 
 				lastArticleId++;
 				String regDate = Util.getDateStr();
@@ -181,6 +231,17 @@ public class App {
 		System.out.println("== 프로그램 끝 ==");
 	}
 	
+	private boolean isLoginIdDup(String loginId) {
+		
+		for (Member member : members) {
+			if (member.loginId.equals(loginId)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	private void makeTestData() {
 		System.out.println("테스트를 위한 데이터를 생성합니다");
 		
