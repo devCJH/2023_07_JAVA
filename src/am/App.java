@@ -101,14 +101,7 @@ public class App {
 				System.out.printf("로그인 비밀번호 : ");
 				String loginPw = sc.nextLine();
 				
-				Member foundMember = null;
-				
-				for (Member member : members) {
-					if (member.loginId.equals(loginId)) {
-						foundMember = member;
-						break;
-					}
-				}
+				Member foundMember = getMemberByLoginId(loginId);
 				
 				if (foundMember == null) {
 					System.out.printf("%s은(는) 존재하지 않는 아이디입니다\n", loginId);
@@ -123,6 +116,17 @@ public class App {
 				this.loginedMember = foundMember;
 				
 				System.out.printf("로그인 성공! %s님 환영합니다\n", foundMember.name);
+				
+			} else if (cmd.equals("member logout")) {
+				
+				if (this.loginedMember == null) {
+					System.out.println("로그인 후 이용해주세요");
+					continue;
+				}
+				
+				this.loginedMember = null;
+				
+				System.out.println("로그아웃 성공!");
 				
 			} else if (cmd.equals("article write")) {
 
@@ -268,6 +272,17 @@ public class App {
 		System.out.println("== 프로그램 끝 ==");
 	}
 	
+	private Member getMemberByLoginId(String loginId) {
+		
+		for (Member member : members) {
+			if (member.loginId.equals(loginId)) {
+				return member;
+			}
+		}
+		
+		return null;
+	}
+
 	private boolean isLoginIdDup(String loginId) {
 		
 		for (Member member : members) {
@@ -278,7 +293,7 @@ public class App {
 		
 		return false;
 	}
-
+	
 	private void makeTestData() {
 		System.out.println("테스트를 위한 데이터를 생성합니다");
 		
