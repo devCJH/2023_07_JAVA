@@ -46,6 +46,11 @@ public class App {
 			
 			if (cmd.equals("member join")) {
 
+				if(isLogined()) {
+					System.out.println("로그아웃 후 이용해주세요");
+					continue;
+				}
+				
 				lastMemberId++;
 				String regDate = Util.getDateStr();
 
@@ -91,7 +96,7 @@ public class App {
 				
 			} else if (cmd.equals("member login")) {
 				
-				if (this.loginedMember != null) {
+				if (isLogined()) {
 					System.out.println("로그아웃 후 이용해주세요");
 					continue;
 				}
@@ -119,7 +124,7 @@ public class App {
 				
 			} else if (cmd.equals("member logout")) {
 				
-				if (this.loginedMember == null) {
+				if (isLogined() == false) {
 					System.out.println("로그인 후 이용해주세요");
 					continue;
 				}
@@ -130,6 +135,11 @@ public class App {
 				
 			} else if (cmd.equals("article write")) {
 
+				if (isLogined() == false) {
+					System.out.println("로그인 후 이용해주세요");
+					continue;
+				}
+				
 				lastArticleId++;
 				String regDate = Util.getDateStr();
 
@@ -211,6 +221,11 @@ public class App {
 
 			} else if (cmd.startsWith("article modify ")) {
 
+				if (isLogined() == false) {
+					System.out.println("로그인 후 이용해주세요");
+					continue;
+				}
+				
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
@@ -240,6 +255,11 @@ public class App {
 
 			} else if (cmd.startsWith("article delete ")) {
 
+				if (isLogined() == false) {
+					System.out.println("로그인 후 이용해주세요");
+					continue;
+				}
+				
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
@@ -272,6 +292,10 @@ public class App {
 		System.out.println("== 프로그램 끝 ==");
 	}
 	
+	private boolean isLogined() {
+		return this.loginedMember != null;
+	}
+
 	private Member getMemberByLoginId(String loginId) {
 		
 		for (Member member : members) {
