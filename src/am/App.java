@@ -12,10 +12,12 @@ public class App {
 	
 	private List<Article> articles;
 	private List<Member> members;
+	private Member loginedMember;
 	
 	public App() {
-		articles = new ArrayList<>();
-		members = new ArrayList<>();
+		this.articles = new ArrayList<>();
+		this.members = new ArrayList<>();
+		this.loginedMember = null;
 	}
 	
 	public void run() {
@@ -26,7 +28,7 @@ public class App {
 		Scanner sc = new Scanner(System.in);
 
 		int lastArticleId = 3;
-		int lastMemberId = 0;
+		int lastMemberId = 3;
 
 		while (true) {
 
@@ -78,7 +80,7 @@ public class App {
 					break;
 				}
 				
-				System.out.printf("로그인 이름 : ");
+				System.out.printf("이름 : ");
 				String name = sc.nextLine();
 
 				Member member = new Member(lastMemberId, regDate, loginId, loginPw, name);
@@ -86,6 +88,41 @@ public class App {
 				members.add(member);
 
 				System.out.printf("%s 회원님의 가입이 완료되었습니다\n", loginId);
+				
+			} else if (cmd.equals("member login")) {
+				
+				if (this.loginedMember != null) {
+					System.out.println("로그아웃 후 이용해주세요");
+					continue;
+				}
+				
+				System.out.printf("로그인 아이디 : ");
+				String loginId = sc.nextLine();
+				System.out.printf("로그인 비밀번호 : ");
+				String loginPw = sc.nextLine();
+				
+				Member foundMember = null;
+				
+				for (Member member : members) {
+					if (member.loginId.equals(loginId)) {
+						foundMember = member;
+						break;
+					}
+				}
+				
+				if (foundMember == null) {
+					System.out.printf("%s은(는) 존재하지 않는 아이디입니다\n", loginId);
+					continue;
+				}
+				
+				if (foundMember.loginPw.equals(loginPw) == false) {
+					System.out.println("비밀번호를 확인해주세요");
+					continue;
+				}
+				
+				this.loginedMember = foundMember;
+				
+				System.out.printf("로그인 성공! %s님 환영합니다\n", foundMember.name);
 				
 			} else if (cmd.equals("article write")) {
 
@@ -139,7 +176,7 @@ public class App {
 					System.out.printf("%d	|	%s	|	%s	|	%d	\n", article.id, article.title, article.regDate,
 							article.hit);
 				}
-
+				
 			} else if (cmd.startsWith("article detail ")) {
 
 				String[] cmdBits = cmd.split(" ");
@@ -248,5 +285,9 @@ public class App {
 		articles.add(new Article(1, Util.getDateStr(), "제목1", "내용1", 10));
 		articles.add(new Article(2, Util.getDateStr(), "제목2", "내용2", 20));
 		articles.add(new Article(3, Util.getDateStr(), "제목3", "내용3", 30));
+		
+		members.add(new Member(1, Util.getDateStr(), "test1", "test1", "유저1"));
+		members.add(new Member(2, Util.getDateStr(), "test2", "test2", "유저2"));
+		members.add(new Member(3, Util.getDateStr(), "test3", "test3", "유저3"));
 	}
 }
