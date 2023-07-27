@@ -199,14 +199,7 @@ public class App {
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
-				Article foundArticle = null;
-
-				for (Article article : articles) {
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-					}
-				}
+				Article foundArticle = getArticleById(id);
 
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시글은 존재하지 않습니다\n", id);
@@ -235,20 +228,18 @@ public class App {
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
-				Article foundArticle = null;
-
-				for (Article article : articles) {
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-					}
-				}
+				Article foundArticle = getArticleById(id);
 
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시글은 존재하지 않습니다\n", id);
 					continue;
 				}
 
+				if (foundArticle.memberId != this.loginedMember.id) {
+					System.out.println("해당 게시글에 대한 권한이 없습니다");
+					continue;
+				}
+				
 				System.out.printf("수정할 제목 : ");
 				String title = sc.nextLine();
 				System.out.printf("수정할 내용 : ");
@@ -269,22 +260,29 @@ public class App {
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
-				int foundIndex = -1;
+//				int foundIndex = -1;
+//
+//				for (int i = 0; i < articles.size(); i++) {
+//					Article article = articles.get(i);
+//					if (article.id == id) {
+//						foundIndex = i;
+//						break;
+//					}
+//				}
+				
+				Article foundArticle = getArticleById(id);
 
-				for (int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
-					if (article.id == id) {
-						foundIndex = i;
-						break;
-					}
-				}
-
-				if (foundIndex == -1) {
+				if (foundArticle == null) {
 					System.out.printf("%d번 게시글은 존재하지 않습니다\n", id);
 					continue;
 				}
+				
+				if (foundArticle.memberId != this.loginedMember.id) {
+					System.out.println("해당 게시글에 대한 권한이 없습니다");
+					continue;
+				}
 
-				articles.remove(foundIndex);
+				articles.remove(foundArticle);
 
 				System.out.printf("%d번 게시글이 삭제되었습니다\n", id);
 
@@ -296,6 +294,17 @@ public class App {
 		sc.close();
 
 		System.out.println("== 프로그램 끝 ==");
+	}
+
+	private Article getArticleById(int id) {
+		
+		for (Article article : articles) {
+			if (article.id == id) {
+				return article;
+			}
+		}
+		
+		return null;
 	}
 
 	private Member getMemberName(int memberId) {
